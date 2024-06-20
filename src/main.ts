@@ -1,3 +1,4 @@
+import helmet from 'helmet';
 import { AppModule } from './app.module'
 import { NestFactory } from '@nestjs/core'
 import { ConfigService } from '@nestjs/config'
@@ -13,6 +14,7 @@ async function bootstrap() {
     const configService = app.get(ConfigService)
     const APP_ROUTE_PREFIX = 'api'
 
+    app.use(helmet());
     app.useGlobalPipes(new ValidationPipe({ whitelist: true }))
     app.enableCors(CORS_CONFIG)
     app.setGlobalPrefix(APP_ROUTE_PREFIX)
