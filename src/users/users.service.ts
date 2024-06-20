@@ -1,6 +1,6 @@
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -34,15 +34,15 @@ export class UsersService {
     return `This action removes a #${id} user`;
   }
 
-  async findOneByEmail(email: string) : Promise<User | null> {
-    return this.userModel.findOne({email: email}).exec();
+  async findOneByEmail(email: string) : Promise<User | undefined> {
+    try {
+      const user = await this.userModel.findOne({email}).exec();
+      if(!user) throw new NotFoundException('User not found',  { cause: new Error(), description: 'Wrong Email address' });
+      return user;
+    } catch (error) { throw new BadRequestException(error.response) }
   }
 
   async hashPassword(password: string): Promise<string> {
     return bcrypt.hash(password, this.saltRounds);
-  }
-
-  async comparePasswords(plainPassword: string, hashedPassword: string): Promise<boolean> {
-    return bcrypt.compare(plainPassword, hashedPassword);
   }
 }

@@ -8,6 +8,7 @@ import { WinstonConfig } from './common/config/winston.config';
 import { UsersModule } from './users/users.module';
 import { APP_FILTER } from '@nestjs/core';
 import { MongoExceptionFilter } from './common/utils/MongoExceptionFilter';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { MongoExceptionFilter } from './common/utils/MongoExceptionFilter';
     }),
     MongooseModule.forRoot(process.env.DB_URL),
     UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [
