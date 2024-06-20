@@ -1,9 +1,8 @@
-import { Document } from 'mongoose'
+import { BaseEntity } from 'src/common/entities/base.entity'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { ApiProperty } from '@nestjs/swagger'
 
 @Schema()
-export class User extends Document {
+export class User extends BaseEntity {
     @Prop({ required: true })
     username: string
 
