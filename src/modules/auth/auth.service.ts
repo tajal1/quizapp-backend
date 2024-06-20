@@ -1,8 +1,8 @@
-import { UsersService } from 'src/users/users.service';
-import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { SignInUserDto } from './dto/signin-user.dto';
-import * as bcrypt from 'bcrypt';
+import { UsersService } from 'src/modules/users/users.service';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 
 @Injectable()
 export class AuthService {
@@ -12,11 +12,9 @@ export class AuthService {
     ) {}
 
   async signIn(signInUserDto: SignInUserDto): Promise<any> {
-    try {
-      const user = await this.usersService.findOneByEmail(signInUserDto.email);
-      await this.comparePasswords(signInUserDto.password, user?.password);
-      return { access_token: await this.jwtService.signAsync({ _id: user._id, username: user.username, email: user.email }) };
-    } catch (error) {  throw new InternalServerErrorException(error)  }
+    const user = await this.usersService.findOneByEmail(signInUserDto.email);
+    await this.comparePasswords(signInUserDto.password, user?.password);
+    return { accessToken: await this.jwtService.signAsync({ _id: user._id, username: user.username, email: user.email }) };
   }
 
   async comparePasswords(plainPassword: string, hashedPassword: string): Promise<boolean> {

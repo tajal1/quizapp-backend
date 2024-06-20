@@ -1,10 +1,10 @@
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class UsersService {
@@ -39,7 +39,10 @@ export class UsersService {
       const user = await this.userModel.findOne({email}).exec();
       if(!user) throw new NotFoundException('User not found',  { cause: new Error(), description: 'Wrong Email address' });
       return user;
-    } catch (error) { throw new BadRequestException(error.response) }
+    } catch (error) { 
+      console.log(error.response)
+      throw new BadRequestException(error.response) 
+    }
   }
 
   async hashPassword(password: string): Promise<string> {
