@@ -1,6 +1,6 @@
 import { Model } from 'mongoose'
 import * as bcrypt from 'bcrypt'
-import { User } from './entities/user.entity'
+import { UserEntity } from './entities/user.entity'
 import { InjectModel } from '@nestjs/mongoose'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
@@ -10,9 +10,9 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 export class UsersService {
     private readonly saltRounds = Number(process.env.SALT_ROUNDS)
 
-    constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+    constructor(@InjectModel(UserEntity.name) private userModel: Model<UserEntity>) {}
 
-    async create(createUserDto: CreateUserDto): Promise<User> {
+    async create(createUserDto: CreateUserDto): Promise<UserEntity> {
         createUserDto.password = await this.hashPassword(createUserDto.password)
         const createdUser = new this.userModel(createUserDto)
         return createdUser.save()
@@ -34,7 +34,7 @@ export class UsersService {
         return `This action removes a #${id} user`
     }
 
-    async findOneByEmail(email: string): Promise<User | undefined> {
+    async findOneByEmail(email: string): Promise<UserEntity | undefined> {
         try {
             const user = await this.userModel.findOne({ email }).exec()
             if (!user)
@@ -44,7 +44,6 @@ export class UsersService {
                 })
             return user
         } catch (error) {
-            console.log(error.response)
             throw new BadRequestException(error.response)
         }
     }

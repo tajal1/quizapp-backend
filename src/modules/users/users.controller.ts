@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@n
 import { UsersService } from './users.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
-import { User } from './entities/user.entity'
+import { UserEntity } from './entities/user.entity'
 import { AuthGuard } from '../auth/auth.guard'
 import { ApiBearerAuth } from '@nestjs/swagger'
 
@@ -11,7 +11,7 @@ export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
     @Post()
-    create(@Body() createUserDto: CreateUserDto): Promise<User> {
+    create(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
         return this.usersService.create(createUserDto)
     }
 
