@@ -1,6 +1,7 @@
 import { Schema as MongooseSchema } from 'mongoose'
 import { BaseEntity } from 'src/common/entities/base.entity'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import { QUIZ_CONSTANT } from 'src/common/config/constant'
 
 @Schema()
 export class Question extends BaseEntity {
@@ -22,10 +23,10 @@ export class Question extends BaseEntity {
     @Prop({ required: true })
     d: string
 
-    @Prop({ required: true })
+    @Prop({ enum: QUIZ_CONSTANT.SUBJECT_CODE.CODE_ENUM, required: true })
     subject_code: string
 
-    @Prop({ required: true })
+    @Prop({ enum: QUIZ_CONSTANT.SUBJECT_CODE.NAME_ENUM, required: true })
     subject_name: string
 
     @Prop({ required: true })

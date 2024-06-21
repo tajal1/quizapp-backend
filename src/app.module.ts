@@ -10,6 +10,7 @@ import { APP_FILTER } from '@nestjs/core'
 import { MongoExceptionFilter } from './common/utils/MongoExceptionFilter'
 import { AuthModule } from './modules/auth/auth.module'
 import { QuestionsModule } from './modules/questions/questions.module'
+import { QuizesModule } from './modules/quizes/quizes.module'
 
 @Module({
     imports: [
@@ -31,7 +32,8 @@ import { QuestionsModule } from './modules/questions/questions.module'
         MongooseModule.forRoot(process.env.DB_URL),
         UsersModule,
         AuthModule,
-        QuestionsModule
+        QuestionsModule,
+        QuizesModule
     ],
     controllers: [AppController],
     providers: [

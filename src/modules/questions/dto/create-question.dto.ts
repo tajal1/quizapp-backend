@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsString, IsNotEmpty, IsBoolean, MaxLength } from 'class-validator'
+import { QUIZ_CONSTANT } from 'src/common/config/constant'
 
 export class CreateQuestionDto {
     @ApiProperty({ example: 'What is the capital of France?', required: true })
@@ -42,7 +43,11 @@ export class CreateQuestionDto {
     @IsString({ message: 'Option D must be a string.' })
     d: string
 
-    @ApiProperty({ example: 'Math101', required: true })
+    @ApiProperty({
+        example: QUIZ_CONSTANT.SUBJECT_CODE.MATH.CODE,
+        enum: QUIZ_CONSTANT.SUBJECT_CODE.CODE_ENUM,
+        required: true
+    })
     @MaxLength(50, {
         message: 'Subject code length must be at most 50 characters.'
     })
@@ -50,7 +55,11 @@ export class CreateQuestionDto {
     @IsString({ message: 'Subject code must be a string.' })
     subject_code: string
 
-    @ApiProperty({ example: 'Math', required: true })
+    @ApiProperty({
+        example: QUIZ_CONSTANT.SUBJECT_CODE.MATH.NAME,
+        enum: QUIZ_CONSTANT.SUBJECT_CODE.CODE_ENUM,
+        required: true
+    })
     @MaxLength(50, {
         message: 'Subject name length must be at most 50 characters.'
     })
