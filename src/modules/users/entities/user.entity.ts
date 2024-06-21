@@ -2,7 +2,7 @@ import { BaseEntity } from 'src/common/entities/base.entity'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 
 @Schema()
-export class UserEntity extends BaseEntity {
+export class User extends BaseEntity {
     @Prop({ required: true })
     username: string
 
@@ -16,4 +16,4 @@ export class UserEntity extends BaseEntity {
     total_score: number
 }
 
-export const UserSchema = SchemaFactory.createForClass(UserEntity)
+export const UserSchema = SchemaFactory.createForClass(User)

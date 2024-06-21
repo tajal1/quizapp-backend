@@ -1,12 +1,11 @@
-import { Schema as MongooseSchema } from 'mongoose';
+import { Schema as MongooseSchema } from 'mongoose'
 import { BaseEntity } from 'src/common/entities/base.entity'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 
 @Schema()
-export class QuestionEntity extends BaseEntity {
-
-    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'UserEntity', required: true })
-    user_id: MongooseSchema.Types.ObjectId;
+export class Question extends BaseEntity {
+    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: true })
+    user_id: MongooseSchema.Types.ObjectId
 
     @Prop({ required: true })
     question: string
@@ -36,4 +35,4 @@ export class QuestionEntity extends BaseEntity {
     is_approved: boolean
 }
 
-export const QuestionSchema = SchemaFactory.createForClass(QuestionEntity);
+export const QuestionSchema = SchemaFactory.createForClass(Question)

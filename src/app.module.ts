@@ -9,7 +9,7 @@ import { UsersModule } from './modules/users/users.module'
 import { APP_FILTER } from '@nestjs/core'
 import { MongoExceptionFilter } from './common/utils/MongoExceptionFilter'
 import { AuthModule } from './modules/auth/auth.module'
-import { QuestionsModule } from './modules/questions/questions.module';
+import { QuestionsModule } from './modules/questions/questions.module'
 
 @Module({
     imports: [
