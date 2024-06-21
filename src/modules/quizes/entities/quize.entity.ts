@@ -5,7 +5,7 @@ import { Question } from 'src/modules/questions/entities/question.entity'
 import { QUIZ_CONSTANT } from 'src/common/config/constant'
 
 @Schema()
-class QuizQuestion extends Question {
+export class QuizQuestion extends Question {
     @Prop()
     user_answer: string
 
@@ -15,7 +15,7 @@ class QuizQuestion extends Question {
 const QuizQuestionSchema = SchemaFactory.createForClass(QuizQuestion)
 
 @Schema()
-class QuizDetails extends BaseEntity {
+export class QuizDetails extends BaseEntity {
     @Prop({ required: true })
     subject_name: string
 

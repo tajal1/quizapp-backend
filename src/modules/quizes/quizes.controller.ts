@@ -28,9 +28,11 @@ export class QuizesController {
         return this.quizesService.findOne(+id)
     }
 
-    @Patch(':id')
-    update(@Param('id') id: string, @Body() updateQuizeDto: UpdateQuizeDto) {
-        return this.quizesService.update(+id, updateQuizeDto)
+    @ApiBearerAuth('JWT')
+    @UseGuards(AuthGuard)
+    @Patch('subjects/:subject_id')
+    quizStartBySubjectId(@Param('subject_id') subject_id: string, @Req() req: any) {
+        return this.quizesService.quizStartBySubjectId(subject_id, req.user?._id)
     }
 
     @Delete(':id')
