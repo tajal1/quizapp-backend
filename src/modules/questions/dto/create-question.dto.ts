@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsString, IsNotEmpty, IsBoolean, MaxLength } from 'class-validator'
+import { IsString, IsNotEmpty, IsBoolean, MaxLength, IsNumber, Max } from 'class-validator'
 import { QUIZ_CONSTANT } from 'src/common/config/constant'
 
 export class CreateQuestionDto {
@@ -74,6 +74,18 @@ export class CreateQuestionDto {
     @IsNotEmpty({ message: 'Please enter the correct answer.' })
     @IsString({ message: 'Answer must be a string.' })
     answer: string
+
+    @ApiProperty({ example: 1, required: false })
+    @IsNotEmpty({ message: 'Please enter positive score of the question.' })
+    @IsNumber({}, { message: 'Positive score must be a number.' })
+    @Max(99, { message: 'Positive score must be at most 99.' })
+    positive_score: number
+
+    @ApiProperty({ example: 0.25, required: false })
+    @IsNotEmpty({ message: 'Please enter negetive score of the question.' })
+    @IsNumber({}, { message: 'Negetive score must be a number.' })
+    @Max(99, { message: 'Negetive score must be at most 99.' })
+    negetive_score: number
 
     @ApiProperty({ example: true, required: true })
     @IsNotEmpty({ message: 'Approval status is required.' })

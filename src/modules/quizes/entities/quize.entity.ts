@@ -9,8 +9,8 @@ export class QuizQuestion extends Question {
     @Prop()
     user_answer: string
 
-    @Prop({ enum: ['right', 'wrong', 'not_submit'], default: 'not_submit' })
-    submit_status: string
+    @Prop({ enum: QUIZ_CONSTANT.USER_SUBMIT_STATUS.STATUS_ENUM, default: QUIZ_CONSTANT.USER_SUBMIT_STATUS.NOT_SUBMIT.CODE })
+    user_submit_status: string
 }
 const QuizQuestionSchema = SchemaFactory.createForClass(QuizQuestion)
 

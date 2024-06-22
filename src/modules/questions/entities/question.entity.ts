@@ -32,6 +32,12 @@ export class Question extends BaseEntity {
     @Prop({ required: true })
     answer: string
 
+    @Prop({ required: true, default: 1 })
+    positive_score: number
+
+    @Prop({ required: true, default: 0.25 })
+    negetive_score: number
+
     @Prop({ required: true, default: true })
     is_approved: boolean
 }
