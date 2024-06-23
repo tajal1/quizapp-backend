@@ -82,7 +82,7 @@ export class QuizesController {
     async score(@Param('quiz_id') quiz_id: string, @Req() req: any) {
         try {
             const score = await this.quizesService.score(quiz_id, req.user?._id)
-            await this.usersService.userUpdateById(req.user?._id, {
+            await this.usersService.incrementScoreById(req.user?._id, {
                 positive_score: score.total_positive_score,
                 negetive_score: score.total_negative_score
             })

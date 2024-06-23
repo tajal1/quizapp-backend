@@ -83,6 +83,16 @@ export class UsersService {
             .exec()
     }
 
+    async incrementScoreById(id: string, updateData: object): Promise<User | null> {
+        return await this.userModel
+            .findByIdAndUpdate(
+                id,
+                { $inc: { ...JSON.parse(JSON.stringify(updateData)) } },
+                { new: true, useFindAndModify: false }
+            )
+            .exec()
+    }
+
     async findOneByEmail(email: string): Promise<User | undefined> {
         try {
             const user = await this.userModel.findOne({ email }).exec()
