@@ -1,7 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
-import { IsNotEmpty, IsNumber, IsString, Max, MaxLength, ValidateNested } from 'class-validator'
+import { ApiProperty } from '@nestjs/swagger'
 import { QUIZ_CONSTANT } from 'src/common/config/constant'
+import { IsNotEmpty, IsNumber, IsString, Max, MaxLength, ValidateNested } from 'class-validator'
 
 export class QuizePerSubjectDto {
     @ApiProperty({

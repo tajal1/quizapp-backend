@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, UseGuards, Req } from '@nestjs/common'
+import { Controller, Get, Post, Body, UseGuards, Req, InternalServerErrorException } from '@nestjs/common'
 import { QuestionsService } from './questions.service'
 import { CreateQuestionDto } from './dto/create-question.dto'
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
@@ -14,11 +14,19 @@ export class QuestionsController {
     @Post()
     create(@Body() createQuestionDto: CreateQuestionDto, @Req() req: any) {
         const createQuestionDtoWithUserId = { ...createQuestionDto, user_id: req.user?._id }
-        return this.questionsService.create(createQuestionDtoWithUserId)
+        try {
+            return this.questionsService.create(createQuestionDtoWithUserId)
+        } catch (error) {
+            throw new InternalServerErrorException(error)
+        }
     }
 
     @Get()
     findAll() {
-        return this.questionsService.findAll()
+        try {
+            return this.questionsService.findAll()
+        } catch (error) {
+            throw new InternalServerErrorException(error)
+        }
     }
 }

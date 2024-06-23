@@ -1,5 +1,5 @@
-import mongoose, { Model } from 'mongoose'
 import * as bcrypt from 'bcrypt'
+import mongoose, { Model } from 'mongoose'
 import { User } from './entities/user.entity'
 import { InjectModel } from '@nestjs/mongoose'
 import { CreateUserDto } from './dto/create-user.dto'

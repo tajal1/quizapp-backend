@@ -1,8 +1,8 @@
 import { Schema as MongooseSchema } from 'mongoose'
+import { QUIZ_CONSTANT } from 'src/common/config/constant'
 import { BaseEntity } from 'src/common/entities/base.entity'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Question } from 'src/modules/questions/entities/question.entity'
-import { QUIZ_CONSTANT } from 'src/common/config/constant'
 
 @Schema()
 export class QuizQuestion extends Question {

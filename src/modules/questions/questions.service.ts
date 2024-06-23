@@ -19,7 +19,8 @@ export class QuestionsService {
     }
 
     async findQuestionsBasedOnSubjectCodeAndNumber(createQuizeDto: CreateQuizeDto): Promise<Question[]> {
-        const fact = {}
+        const [fact, quiz_details] = [{}, []]
+
         createQuizeDto.quiz_number_per_subject.forEach(question => {
             fact[question.subject_code] = [
                 {
@@ -39,9 +40,8 @@ export class QuestionsService {
                 $facet: fact
             }
         ]
-        const quies = await this.questionModel.aggregate(pipeline)
-        const quiz_details = []
-        quies.forEach((subject: Question) => {
+        const quiezs = await this.questionModel.aggregate(pipeline)
+        quiezs.forEach((subject: Question) => {
             for (const key in subject) {
                 quiz_details.push({
                     subject_name: subject[key][0].subject_name,

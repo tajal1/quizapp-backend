@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common'
-import { CreateQuizeDto } from './dto/create-quize.dto'
-import { QuestionsService } from '../questions/questions.service'
 import { InjectModel } from '@nestjs/mongoose'
-import { QuizQuestion, Quize } from './entities/quize.entity'
 import mongoose, { Model, ObjectId } from 'mongoose'
 import { SubmitQuizDto } from './dto/submit-quize.dto'
+import { CreateQuizeDto } from './dto/create-quize.dto'
 import { QUIZ_CONSTANT } from 'src/common/config/constant'
+import { QuizQuestion, Quize } from './entities/quize.entity'
+import { QuestionsService } from '../questions/questions.service'
 
 @Injectable()
 export class QuizesService {
