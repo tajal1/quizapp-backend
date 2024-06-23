@@ -1,10 +1,10 @@
 import { DocumentBuilder } from '@nestjs/swagger'
 
 export const config = new DocumentBuilder()
-    .setTitle('Somu')
-    .setDescription('Somu backend api')
-    .setVersion('2.0.0')
-    .addTag('v2')
+    .setTitle('Quiz app backend')
+    .setDescription('A dynamic quiz app for users')
+    .setVersion('1.0.0')
+    // .addTag('v2')
     .addBearerAuth(
         {
             type: 'http',

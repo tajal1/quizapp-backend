@@ -19,6 +19,8 @@ $ npm run start
 
 # watch mode
 $ npm run start:dev
+# Swagger documentation
+http://localhost:3001/api/docs/
 
 # production mode
 $ npm run start:prod

@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common'
-import { AppService } from './app.service'
 import { WinstonModule } from 'nest-winston'
-import { AppController } from './app.controller'
 import { MongooseModule } from '@nestjs/mongoose'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { WinstonConfig } from './common/config/winston.config'
@@ -35,9 +33,7 @@ import { QuizesModule } from './modules/quizes/quizes.module'
         QuestionsModule,
         QuizesModule
     ],
-    controllers: [AppController],
     providers: [
-        AppService,
         {
             provide: APP_FILTER,
             useClass: MongoExceptionFilter
