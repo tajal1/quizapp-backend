@@ -1,16 +1,15 @@
-import { Model } from 'mongoose'
+import mongoose, { Model } from 'mongoose'
 import * as bcrypt from 'bcrypt'
 import { User } from './entities/user.entity'
 import { InjectModel } from '@nestjs/mongoose'
 import { CreateUserDto } from './dto/create-user.dto'
-import { UpdateUserDto } from './dto/update-user.dto'
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
 
 @Injectable()
 export class UsersService {
     private readonly saltRounds = Number(process.env.SALT_ROUNDS)
 
-    constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+    constructor(@InjectModel(User.name) private userModel: Model<User>) { }
 
     async create(createUserDto: CreateUserDto): Promise<User> {
         createUserDto.password = await this.hashPassword(createUserDto.password)
@@ -22,12 +21,67 @@ export class UsersService {
         return `This action returns all users`
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} user`
+    async findOne(_id: string) {
+        return await this.userModel.findById({ _id });
     }
 
-    update(id: number, updateUserDto: UpdateUserDto) {
-        return `This action updates a #${id} user`
+    async findOneWthRank(_id: string) {
+        return await this.userModel.aggregate([
+            {
+                '$addFields': {
+                    'score': {
+                        '$subtract': [
+                            '$positive_score', '$negetive_score'
+                        ]
+                    }
+                }
+            }, {
+                '$sort': {
+                    'score': -1
+                }
+            }, {
+                '$group': {
+                    '_id': null,
+                    'users': {
+                        '$push': {
+                            '_id': '$_id',
+                            'username': '$username',
+                            'email': '$email',
+                            'positive_score': '$positive_score',
+                            'negetive_score': '$negetive_score',
+                            'score': '$score'
+                        }
+                    }
+                }
+            }, {
+                '$unwind': {
+                    'path': '$users',
+                    'includeArrayIndex': 'rank'
+                }
+            }, {
+                '$project': {
+                    '_id': '$users._id',
+                    'username': '$users.username',
+                    'email': '$users.email',
+                    'positive_score':'$users.positive_score',
+                    'negetive_score': '$users.negetive_score',
+                    'score': '$users.score',
+                    'rank': {
+                        '$add': [
+                            '$rank', 1
+                        ]
+                    }
+                }
+            }, {
+                '$match': {
+                    '_id': new mongoose.Types.ObjectId(_id)
+                }
+            }
+        ]);
+    }
+
+    async userUpdateById(id: string, updateData: object): Promise<User | null> {
+        return await this.userModel.findByIdAndUpdate(id, { $set: { ...JSON.parse(JSON.stringify(updateData)) } }).exec()
     }
 
     remove(id: number) {

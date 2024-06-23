@@ -30,6 +30,4 @@ export class SubmitQuizDto {
     @Type(() => AnsweredQuizDto)
     quizes: AnsweredQuizDto[]
 
-
-    // submit_status: string
 }

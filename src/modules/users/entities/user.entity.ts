@@ -13,7 +13,10 @@ export class User extends BaseEntity {
     email: string
 
     @Prop({ default: 0 })
-    total_score: number
+    positive_score: number
+
+    @Prop({ default: 0 })
+    negetive_score: number
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)

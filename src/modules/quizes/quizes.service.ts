@@ -28,8 +28,8 @@ export class QuizesService {
         return createdQuize.save()
     }
 
-    findAll() {
-        return  this.quizModel.find()
+    findAll(user_id: string) {
+        return  this.quizModel.find({user_id: new mongoose.Types.ObjectId(user_id)})
     }
 
     findOne(_id: string) {
@@ -138,7 +138,8 @@ export class QuizesService {
     }
 
     async score(_id: string, user_id: string) {
-        return this.quizModel.aggregate([
+        
+        const score: any = await this.quizModel.aggregate([
             {
                 '$match': {
                     '_id': new mongoose.Types.ObjectId(_id),
@@ -222,6 +223,16 @@ export class QuizesService {
                 }
             }
         ])
+
+        await this.updateQuizDetailsById({_id: new mongoose.Types.ObjectId(_id)}, 
+        {
+            submit_status: QUIZ_CONSTANT.QUIZ_SUBMIT_STATUS.SUBMIT.CODE,
+            total_positive_score: score[0]?.total_positive_score ? score[0].total_positive_score : 0,
+            total_negative_score: score[0]?.total_negative_score ? score[0].total_negative_score : 0
+        }
+    )
+
+    return score.length ? score[0] : {_id: null, total_positive_score: 0, total_negative_score: 0}
     }
 
 }
