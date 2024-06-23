@@ -15,7 +15,7 @@ export class QuestionsService {
     }
 
     findAll() {
-        return this.questionModel.find();
+        return this.questionModel.find()
     }
 
     async findQuestionsBasedOnSubjectCodeAndNumber(createQuizeDto: CreateQuizeDto): Promise<Question[]> {

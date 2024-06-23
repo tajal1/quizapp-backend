@@ -19,9 +19,8 @@ export class UsersController {
     @UseGuards(AuthGuard)
     @Get('me')
     async findOne(@Req() req: any) {
-        const user_id: string = req.user._id;
-        const user = await this.usersService.findOneWthRank(user_id);
+        const user_id: string = req.user._id
+        const user = await this.usersService.findOneWthRank(user_id)
         return user[0]
-
     }
 }

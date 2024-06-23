@@ -23,5 +23,4 @@ export class QuestionsController {
     findAll() {
         return this.questionsService.findAll()
     }
-
 }

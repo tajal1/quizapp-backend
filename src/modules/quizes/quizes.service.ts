@@ -12,7 +12,7 @@ export class QuizesService {
     constructor(
         @InjectModel(Quize.name) private quizModel: Model<Quize>,
         private readonly questionsService: QuestionsService
-    ) { }
+    ) {}
 
     async create(createQuizeDto: CreateQuizeDto | any) {
         const quizes = await this.questionsService.findQuestionsBasedOnSubjectCodeAndNumber(createQuizeDto)
@@ -28,11 +28,11 @@ export class QuizesService {
     }
 
     findAll(user_id: string) {
-        return  this.quizModel.find({user_id: new mongoose.Types.ObjectId(user_id)})
+        return this.quizModel.find({ user_id: new mongoose.Types.ObjectId(user_id) })
     }
 
     findOne(_id: string) {
-        return this.quizModel.findById(_id);
+        return this.quizModel.findById(_id)
     }
 
     async quizStartBySubjectId(quiz_id: string, subject_id: string, user_id: ObjectId) {
@@ -51,8 +51,8 @@ export class QuizesService {
         const quizId = new mongoose.Types.ObjectId(quiz_id)
         const quizCount = await this.quizModel.aggregate([
             {
-                '$match': {
-                    '_id': quizId
+                $match: {
+                    _id: quizId
                 }
             },
             {
@@ -83,135 +83,134 @@ export class QuizesService {
     }
 
     async updateQuizDetailsById(id: object, updateData: object): Promise<Quize | null> {
-        await this.quizModel.updateOne(id, { $set: { ...JSON.parse(JSON.stringify(updateData)) } }, { new: true }).exec()
+        await this.quizModel
+            .updateOne(id, { $set: { ...JSON.parse(JSON.stringify(updateData)) } }, { new: true })
+            .exec()
         return
     }
- 
-    async submitQuizBySubjectId(_id: string, subject_id: string, submitQuizDto: SubmitQuizDto, user_id: ObjectId) {
 
+    async submitQuizBySubjectId(_id: string, subject_id: string, submitQuizDto: SubmitQuizDto, user_id: ObjectId) {
         const id = { 'quiz_details._id': new mongoose.Types.ObjectId(subject_id) }
         const _ids = new mongoose.Types.ObjectId(_id)
-        const { total_quiz, quiz_details } = JSON.parse(JSON.stringify(await this.quizCountBySubjectId(_id, subject_id)))
+        const { total_quiz, quiz_details } = JSON.parse(
+            JSON.stringify(await this.quizCountBySubjectId(_id, subject_id))
+        )
 
-        const res = await this.updateQuizDetails(_id, subject_id, submitQuizDto.quizes);
+        const res = await this.updateQuizDetails(_id, subject_id, submitQuizDto.quizes)
 
-        await this.quizModel.findByIdAndUpdate(
-            { _id: _ids },
-            {
-                $inc: {
-                    total_positive_score: quiz_details.subject_quiz_total_positive_score,
-                    total_negative_score: quiz_details.subject_quiz_total_negative_score
-                }
-            },
-            { new: true }
-        ).exec();
+        await this.quizModel
+            .findByIdAndUpdate(
+                { _id: _ids },
+                {
+                    $inc: {
+                        total_positive_score: quiz_details.subject_quiz_total_positive_score,
+                        total_negative_score: quiz_details.subject_quiz_total_negative_score
+                    }
+                },
+                { new: true }
+            )
+            .exec()
         return res
     }
 
-    async updateQuizDetails(quizId: string, quizDetailsId: string, updates: { _id: string, user_answer: string }[]) {
+    async updateQuizDetails(quizId: string, quizDetailsId: string, updates: { _id: string; user_answer: string }[]) {
         const bulkOps = updates.map(update => ({
             updateOne: {
                 filter: {
                     _id: quizId,
                     'quiz_details._id': new mongoose.Types.ObjectId(quizDetailsId),
-                    'quiz_details.quizes._id': new mongoose.Types.ObjectId(update._id),
+                    'quiz_details.quizes._id': new mongoose.Types.ObjectId(update._id)
                 },
                 update: {
                     $set: {
                         'quiz_details.$[i].quizes.$[j].user_answer': update.user_answer,
-                        'quiz_details.$[i].quizes.$[j].user_submit_status': QUIZ_CONSTANT.QUIZ_SUBMIT_STATUS.SUBMIT.CODE,
-                    },
+                        'quiz_details.$[i].quizes.$[j].user_submit_status': QUIZ_CONSTANT.QUIZ_SUBMIT_STATUS.SUBMIT.CODE
+                    }
                 },
                 arrayFilters: [
                     { 'i._id': new mongoose.Types.ObjectId(quizDetailsId) },
-                    { 'j._id': new mongoose.Types.ObjectId(update._id) },
-                ],
+                    { 'j._id': new mongoose.Types.ObjectId(update._id) }
+                ]
             }
-        }));
+        }))
 
-        return await this.quizModel.bulkWrite(bulkOps);
+        return await this.quizModel.bulkWrite(bulkOps)
     }
 
     async score(_id: string, user_id: string) {
-        
         const score: any = await this.quizModel.aggregate([
             {
-                '$match': {
-                    '_id': new mongoose.Types.ObjectId(_id),
-                    'user_id': new mongoose.Types.ObjectId(user_id)
+                $match: {
+                    _id: new mongoose.Types.ObjectId(_id),
+                    user_id: new mongoose.Types.ObjectId(user_id)
                 }
-            }, {
-                '$unwind': {
-                    'path': '$quiz_details'
+            },
+            {
+                $unwind: {
+                    path: '$quiz_details'
                 }
-            }, {
-                '$unwind': {
-                    'path': '$quiz_details.quizes'
+            },
+            {
+                $unwind: {
+                    path: '$quiz_details.quizes'
                 }
-            }, {
-                '$addFields': {
-                    'score': {
-                        '$cond': {
-                            'if': {
-                                '$and': [
+            },
+            {
+                $addFields: {
+                    score: {
+                        $cond: {
+                            if: {
+                                $and: [
                                     {
-                                        '$eq': [
-                                            '$quiz_details.quizes.user_answer', '$quiz_details.quizes.answer'
-                                        ]
-                                    }, {
-                                        '$eq': [
-                                            '$quiz_details.quizes.user_submit_status', 'submit'
-                                        ]
+                                        $eq: ['$quiz_details.quizes.user_answer', '$quiz_details.quizes.answer']
+                                    },
+                                    {
+                                        $eq: ['$quiz_details.quizes.user_submit_status', 'submit']
                                     }
                                 ]
                             },
-                            'then': '$quiz_details.quizes.positive_score',
-                            'else': '$quiz_details.quizes.negetive_score'
+                            then: '$quiz_details.quizes.positive_score',
+                            else: '$quiz_details.quizes.negetive_score'
                         }
                     }
                 }
-            }, {
-                '$group': {
-                    '_id': '$_id',
-                    'total_positive_score': {
-                        '$sum': {
-                            '$cond': {
-                                'if': {
-                                    '$and': [
+            },
+            {
+                $group: {
+                    _id: '$_id',
+                    total_positive_score: {
+                        $sum: {
+                            $cond: {
+                                if: {
+                                    $and: [
                                         {
-                                            '$eq': [
-                                                '$quiz_details.quizes.user_answer', '$quiz_details.quizes.answer'
-                                            ]
-                                        }, {
-                                            '$eq': [
-                                                '$quiz_details.quizes.user_submit_status', 'submit'
-                                            ]
+                                            $eq: ['$quiz_details.quizes.user_answer', '$quiz_details.quizes.answer']
+                                        },
+                                        {
+                                            $eq: ['$quiz_details.quizes.user_submit_status', 'submit']
                                         }
                                     ]
                                 },
-                                'then': '$quiz_details.quizes.positive_score',
-                                'else': 0
+                                then: '$quiz_details.quizes.positive_score',
+                                else: 0
                             }
                         }
                     },
-                    'total_negative_score': {
-                        '$sum': {
-                            '$cond': {
-                                'if': {
-                                    '$and': [
+                    total_negative_score: {
+                        $sum: {
+                            $cond: {
+                                if: {
+                                    $and: [
                                         {
-                                            '$ne': [
-                                                '$quiz_details.quizes.user_answer', '$quiz_details.quizes.answer'
-                                            ]
-                                        }, {
-                                            '$eq': [
-                                                '$quiz_details.quizes.user_submit_status', 'submit'
-                                            ]
+                                            $ne: ['$quiz_details.quizes.user_answer', '$quiz_details.quizes.answer']
+                                        },
+                                        {
+                                            $eq: ['$quiz_details.quizes.user_submit_status', 'submit']
                                         }
                                     ]
                                 },
-                                'then': '$quiz_details.quizes.negetive_score',
-                                'else': 0
+                                then: '$quiz_details.quizes.negetive_score',
+                                else: 0
                             }
                         }
                     }
@@ -219,15 +218,15 @@ export class QuizesService {
             }
         ])
 
-        await this.updateQuizDetailsById({_id: new mongoose.Types.ObjectId(_id)}, 
-        {
-            submit_status: QUIZ_CONSTANT.QUIZ_SUBMIT_STATUS.SUBMIT.CODE,
-            total_positive_score: score[0]?.total_positive_score ? score[0].total_positive_score : 0,
-            total_negative_score: score[0]?.total_negative_score ? score[0].total_negative_score : 0
-        }
-    )
+        await this.updateQuizDetailsById(
+            { _id: new mongoose.Types.ObjectId(_id) },
+            {
+                submit_status: QUIZ_CONSTANT.QUIZ_SUBMIT_STATUS.SUBMIT.CODE,
+                total_positive_score: score[0]?.total_positive_score ? score[0].total_positive_score : 0,
+                total_negative_score: score[0]?.total_negative_score ? score[0].total_negative_score : 0
+            }
+        )
 
-    return score.length ? score[0] : {_id: null, total_positive_score: 0, total_negative_score: 0}
+        return score.length ? score[0] : { _id: null, total_positive_score: 0, total_negative_score: 0 }
     }
-
 }

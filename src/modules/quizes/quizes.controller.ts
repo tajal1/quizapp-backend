@@ -11,7 +11,7 @@ import { UsersService } from '../users/users.service'
 export class QuizesController {
     constructor(
         private readonly quizesService: QuizesService,
-        private readonly usersService: UsersService,
+        private readonly usersService: UsersService
     ) {}
 
     @ApiBearerAuth('JWT')
@@ -46,17 +46,25 @@ export class QuizesController {
     @ApiBearerAuth('JWT')
     @UseGuards(AuthGuard)
     @Put(':_id/subject/:subject_id')
-    submitQuizBySubjectId(@Param('_id') _id: string, @Param('subject_id') subject_id: string, @Body() submitQuizDto: SubmitQuizDto, @Req() req: any) {
-        return this.quizesService.submitQuizBySubjectId(_id, subject_id,submitQuizDto, req.user?._id)
+    submitQuizBySubjectId(
+        @Param('_id') _id: string,
+        @Param('subject_id') subject_id: string,
+        @Body() submitQuizDto: SubmitQuizDto,
+        @Req() req: any
+    ) {
+        return this.quizesService.submitQuizBySubjectId(_id, subject_id, submitQuizDto, req.user?._id)
     }
 
     @ApiBearerAuth('JWT')
     @UseGuards(AuthGuard)
     @Patch('score/:quiz_id')
     async score(@Param('quiz_id') quiz_id: string, @Req() req: any) {
-        const score = await this.quizesService.score(quiz_id, req.user?._id);
+        const score = await this.quizesService.score(quiz_id, req.user?._id)
         console.log(score)
-        await this.usersService.userUpdateById(req.user?._id, {positive_score: score.total_positive_score, negetive_score: score.total_negative_score})
+        await this.usersService.userUpdateById(req.user?._id, {
+            positive_score: score.total_positive_score,
+            negetive_score: score.total_negative_score
+        })
         return score
     }
 }

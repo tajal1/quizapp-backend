@@ -29,7 +29,7 @@ export const QUIZ_CONSTANT = {
             CODE: 'default',
             NAME: 'Default'
         }
-    },
+    }
 
     // QUIZ_SUBMIT_STATUS: {
     //     STATUS_ENUM: ['right', 'not_submit', 'wrong'],

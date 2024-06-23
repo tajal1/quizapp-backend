@@ -29,5 +29,4 @@ export class SubmitQuizDto {
     @ValidateNested({ each: true })
     @Type(() => AnsweredQuizDto)
     quizes: AnsweredQuizDto[]
-
 }
