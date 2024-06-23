@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { CreateQuizeDto } from './dto/create-quize.dto'
-import { UpdateQuizeDto } from './dto/update-quize.dto'
 import { QuestionsService } from '../questions/questions.service'
 import { InjectModel } from '@nestjs/mongoose'
-import { QuizDetails, QuizQuestion, Quize } from './entities/quize.entity'
+import { QuizQuestion, Quize } from './entities/quize.entity'
 import mongoose, { Model, ObjectId } from 'mongoose'
 import { SubmitQuizDto } from './dto/submit-quize.dto'
 import { QUIZ_CONSTANT } from 'src/common/config/constant'
@@ -88,10 +87,6 @@ export class QuizesService {
         return
     }
  
-    remove(id: number) {
-        return `This action removes a #${id} quize`
-    }
-
     async submitQuizBySubjectId(_id: string, subject_id: string, submitQuizDto: SubmitQuizDto, user_id: ObjectId) {
 
         const id = { 'quiz_details._id': new mongoose.Types.ObjectId(subject_id) }

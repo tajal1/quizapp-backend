@@ -17,10 +17,6 @@ export class UsersService {
         return createdUser.save()
     }
 
-    findAll() {
-        return `This action returns all users`
-    }
-
     async findOne(_id: string) {
         return await this.userModel.findById({ _id });
     }
@@ -82,10 +78,6 @@ export class UsersService {
 
     async userUpdateById(id: string, updateData: object): Promise<User | null> {
         return await this.userModel.findByIdAndUpdate(id, { $set: { ...JSON.parse(JSON.stringify(updateData)) } }).exec()
-    }
-
-    remove(id: number) {
-        return `This action removes a #${id} user`
     }
 
     async findOneByEmail(email: string): Promise<User | undefined> {

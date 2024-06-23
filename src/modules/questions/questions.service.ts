@@ -1,11 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import { CreateQuestionDto } from './dto/create-question.dto'
-import { UpdateQuestionDto } from './dto/update-question.dto'
 import { InjectModel } from '@nestjs/mongoose'
 import { Question } from './entities/question.entity'
 import { Model } from 'mongoose'
 import { CreateQuizeDto } from '../quizes/dto/create-quize.dto'
-import { QUIZ_CONSTANT } from 'src/common/config/constant'
 
 @Injectable()
 export class QuestionsService {
@@ -18,18 +16,6 @@ export class QuestionsService {
 
     findAll() {
         return this.questionModel.find();
-    }
-
-    findOne(id: number) {
-        return `This action returns a #${id} question`
-    }
-
-    update(id: number, updateQuestionDto: UpdateQuestionDto) {
-        return `This action updates a #${id} question`
-    }
-
-    remove(id: number) {
-        return `This action removes a #${id} question`
     }
 
     async findQuestionsBasedOnSubjectCodeAndNumber(createQuizeDto: CreateQuizeDto): Promise<Question[]> {
