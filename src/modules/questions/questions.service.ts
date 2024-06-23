@@ -19,6 +19,7 @@ export class QuestionsService {
     }
 
     async findQuestionsBasedOnSubjectCodeAndNumber(createQuizeDto: CreateQuizeDto): Promise<Question[]> {
+        console.log('hello', createQuizeDto)
         const [fact, quiz_details] = [{}, []]
 
         createQuizeDto.quiz_number_per_subject.forEach(question => {
@@ -41,15 +42,18 @@ export class QuestionsService {
             }
         ]
         const quiezs = await this.questionModel.aggregate(pipeline)
-        quiezs.forEach((subject: Question) => {
+
+        quiezs?.forEach((subject: Question) => {
             for (const key in subject) {
-                quiz_details.push({
-                    subject_name: subject[key][0].subject_name,
-                    subject_code: subject[key][0].subject_code,
-                    quizes: subject[key],
-                    subject_quiz_total_positive_score: 0,
-                    subject_quiz_total_negative_score: 0
-                })
+                if (subject[key].length) {
+                    quiz_details.push({
+                        subject_name: subject[key][0]?.subject_name,
+                        subject_code: subject[key][0]?.subject_code,
+                        quizes: subject[key],
+                        subject_quiz_total_positive_score: 0,
+                        subject_quiz_total_negative_score: 0
+                    })
+                }
             }
         })
         return quiz_details
