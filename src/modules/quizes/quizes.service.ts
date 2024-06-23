@@ -29,11 +29,11 @@ export class QuizesService {
     }
 
     findAll() {
-        return `This action returns all quizes`
+        return  this.quizModel.find()
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} quize`
+    findOne(_id: string) {
+        return this.quizModel.findById(_id);
     }
 
     async quizStartBySubjectId(quiz_id: string, subject_id: string, user_id: ObjectId) {
@@ -84,11 +84,10 @@ export class QuizesService {
     }
 
     async updateQuizDetailsById(id: object, updateData: object): Promise<Quize | null> {
-        console.log(id)
         await this.quizModel.updateOne(id, { $set: { ...JSON.parse(JSON.stringify(updateData)) } }, { new: true }).exec()
         return
     }
-
+ 
     remove(id: number) {
         return `This action removes a #${id} quize`
     }
@@ -99,60 +98,130 @@ export class QuizesService {
         const _ids = new mongoose.Types.ObjectId(_id)
         const { total_quiz, quiz_details } = JSON.parse(JSON.stringify(await this.quizCountBySubjectId(_id, subject_id)))
 
-
-        for (let index = 0; index < submitQuizDto.quizes.length; index++) {
-            for (let i = 0; i < quiz_details.quizes.length; i++) {
-
-                if (quiz_details.quizes[i]._id === submitQuizDto.quizes[index]._id) {
-                    quiz_details.quizes[i].user_answer = submitQuizDto.quizes[index].user_answer
-
-                    if (quiz_details.quizes[i].user_answer === quiz_details.quizes[i].answer) {
-                        quiz_details.quizes[i].user_submit_status = QUIZ_CONSTANT.USER_SUBMIT_STATUS.RIGHT.CODE
-                        quiz_details.subject_quiz_total_positive_score += 1
-                    } else {
-                        quiz_details.quizes[i].user_submit_status = QUIZ_CONSTANT.USER_SUBMIT_STATUS.WRONG.CODE
-                        quiz_details.subject_quiz_total_negative_score += .25
-                    }
-                }
-            }
-        }
-
         const res = await this.updateQuizDetails(_id, subject_id, submitQuizDto.quizes);
 
         await this.quizModel.findByIdAndUpdate(
-            {_id: _ids},
-            { $inc: { 
-                total_positive_score: quiz_details.subject_quiz_total_positive_score ,
-                total_negative_score: quiz_details.subject_quiz_total_negative_score
-            } },
+            { _id: _ids },
+            {
+                $inc: {
+                    total_positive_score: quiz_details.subject_quiz_total_positive_score,
+                    total_negative_score: quiz_details.subject_quiz_total_negative_score
+                }
+            },
             { new: true }
-          ).exec();
+        ).exec();
         return res
     }
 
-    
     async updateQuizDetails(quizId: string, quizDetailsId: string, updates: { _id: string, user_answer: string }[]) {
         const bulkOps = updates.map(update => ({
-          updateOne: {
-            filter: {
-              _id: quizId,
-              'quiz_details._id': new mongoose.Types.ObjectId(quizDetailsId) ,
-              'quiz_details.quizes._id':new mongoose.Types.ObjectId(update._id) ,
-            },
-            update: {
-              $set: {
-                'quiz_details.$[i].quizes.$[j].user_answer': update.user_answer,
-              },
-            },
-            arrayFilters: [
-              { 'i._id': new mongoose.Types.ObjectId(quizDetailsId) },
-              { 'j._id': new mongoose.Types.ObjectId(update._id) },
-            ],
-          }
+            updateOne: {
+                filter: {
+                    _id: quizId,
+                    'quiz_details._id': new mongoose.Types.ObjectId(quizDetailsId),
+                    'quiz_details.quizes._id': new mongoose.Types.ObjectId(update._id),
+                },
+                update: {
+                    $set: {
+                        'quiz_details.$[i].quizes.$[j].user_answer': update.user_answer,
+                        'quiz_details.$[i].quizes.$[j].user_submit_status': QUIZ_CONSTANT.QUIZ_SUBMIT_STATUS.SUBMIT.CODE,
+                    },
+                },
+                arrayFilters: [
+                    { 'i._id': new mongoose.Types.ObjectId(quizDetailsId) },
+                    { 'j._id': new mongoose.Types.ObjectId(update._id) },
+                ],
+            }
         }));
-      
-        return await this.quizModel.bulkWrite(bulkOps);
-      }
 
+        return await this.quizModel.bulkWrite(bulkOps);
+    }
+
+    async score(_id: string, user_id: string) {
+        return this.quizModel.aggregate([
+            {
+                '$match': {
+                    '_id': new mongoose.Types.ObjectId(_id),
+                    'user_id': new mongoose.Types.ObjectId(user_id)
+                }
+            }, {
+                '$unwind': {
+                    'path': '$quiz_details'
+                }
+            }, {
+                '$unwind': {
+                    'path': '$quiz_details.quizes'
+                }
+            }, {
+                '$addFields': {
+                    'score': {
+                        '$cond': {
+                            'if': {
+                                '$and': [
+                                    {
+                                        '$eq': [
+                                            '$quiz_details.quizes.user_answer', '$quiz_details.quizes.answer'
+                                        ]
+                                    }, {
+                                        '$eq': [
+                                            '$quiz_details.quizes.user_submit_status', 'submit'
+                                        ]
+                                    }
+                                ]
+                            },
+                            'then': '$quiz_details.quizes.positive_score',
+                            'else': '$quiz_details.quizes.negetive_score'
+                        }
+                    }
+                }
+            }, {
+                '$group': {
+                    '_id': '$_id',
+                    'total_positive_score': {
+                        '$sum': {
+                            '$cond': {
+                                'if': {
+                                    '$and': [
+                                        {
+                                            '$eq': [
+                                                '$quiz_details.quizes.user_answer', '$quiz_details.quizes.answer'
+                                            ]
+                                        }, {
+                                            '$eq': [
+                                                '$quiz_details.quizes.user_submit_status', 'submit'
+                                            ]
+                                        }
+                                    ]
+                                },
+                                'then': '$quiz_details.quizes.positive_score',
+                                'else': 0
+                            }
+                        }
+                    },
+                    'total_negative_score': {
+                        '$sum': {
+                            '$cond': {
+                                'if': {
+                                    '$and': [
+                                        {
+                                            '$ne': [
+                                                '$quiz_details.quizes.user_answer', '$quiz_details.quizes.answer'
+                                            ]
+                                        }, {
+                                            '$eq': [
+                                                '$quiz_details.quizes.user_submit_status', 'submit'
+                                            ]
+                                        }
+                                    ]
+                                },
+                                'then': '$quiz_details.quizes.negetive_score',
+                                'else': 0
+                            }
+                        }
+                    }
+                }
+            }
+        ])
+    }
 
 }

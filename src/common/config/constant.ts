@@ -30,19 +30,20 @@ export const QUIZ_CONSTANT = {
             NAME: 'Default'
         }
     },
-    USER_SUBMIT_STATUS: {
-        STATUS_ENUM: ['right', 'not_submit', 'wrong'],
-        RIGHT: {
-            CODE: 'right',
-            NAME: 'Right'
-        },
-        NOT_SUBMIT: {
-            CODE: 'not_submit',
-            NAME: 'Not Submit'
-        },
-        WRONG: {
-            CODE: 'wrong',
-            NAME: 'Wrong'
-        }
-    }
+
+    // QUIZ_SUBMIT_STATUS: {
+    //     STATUS_ENUM: ['right', 'not_submit', 'wrong'],
+    //     RIGHT: {
+    //         CODE: 'right',
+    //         NAME: 'Right'
+    //     },
+    //     NOT_SUBMIT: {
+    //         CODE: 'not_submit',
+    //         NAME: 'Not Submit'
+    //     },
+    //     WRONG: {
+    //         CODE: 'wrong',
+    //         NAME: 'Wrong'
+    //     }
+    // }
 }

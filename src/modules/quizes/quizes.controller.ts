@@ -24,9 +24,9 @@ export class QuizesController {
         return this.quizesService.findAll()
     }
 
-    @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.quizesService.findOne(+id)
+    @Get(':_id')
+    findOne(@Param('_id') _id: string) {
+        return this.quizesService.findOne(_id)
     }
 
     @ApiBearerAuth('JWT')

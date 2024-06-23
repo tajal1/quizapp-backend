@@ -17,7 +17,7 @@ export class QuestionsService {
     }
 
     findAll() {
-        return `This action returns all questions`
+        return this.questionModel.find();
     }
 
     findOne(id: number) {

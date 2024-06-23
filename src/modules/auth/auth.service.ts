@@ -15,7 +15,7 @@ export class AuthService {
         const user = await this.usersService.findOneByEmail(signInUserDto.email)
         await this.comparePasswords(signInUserDto.password, user?.password)
         return {
-            accessToken: await this.jwtService.signAsync(
+            access_token: await this.jwtService.signAsync(
                 { _id: user._id, username: user.username, email: user.email },
                 { secret: process.env.SECRET_JWT_KEY }
             )
