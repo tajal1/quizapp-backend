@@ -5,6 +5,9 @@ import { BaseController } from 'src/common/base/base.controller';
 import { User } from './entities/user.entity';
 import { ValidateDto } from 'src/common/decorators/validate-dto.decorator';
 import { DtoValidationInterceptor } from 'src/common/interceptors/dto-validation.interceptor';
+import { registerDto } from 'src/common/dto-registry';
+
+registerDto('users', CreateUserDto);
 
 @Controller('users')
 export class UsersController extends BaseController<User, CreateUserDto, CreateUserDto> {

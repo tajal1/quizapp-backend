@@ -3,6 +3,8 @@ import { Document } from 'mongoose'; // Import Document from Mongoose
 import { BaseService } from './base.service';
 import { validateDto } from './dto.validation';
 import { CreateUserDto } from 'src/modules/users/dto/create-user.dto';
+import { getDtoClass } from '../dto-registry';
+import { validate } from 'class-validator';
 
 @Controller()
 export abstract class BaseController<T extends Document, CreateDto, UpdateDto> {
@@ -11,8 +13,14 @@ export abstract class BaseController<T extends Document, CreateDto, UpdateDto> {
     @Post()
     async create(@Body() createDto: CreateDto, @Req() req: any) {
         try {
-            await validateDto(createDto, CreateUserDto)
-            console.log('==============<><>', req.url)
+            // Get DTO class based on URL
+            const dtoClass = getDtoClass('users'); // Strip query params
+            if (dtoClass) {
+                await validateDto(createDto, dtoClass);
+                console.log('BaseController: Validated DTO:', createDto, 'URL:', req.url);
+            } else {
+                console.log('BaseController: No specific DTO validation for URL:', req.url);
+            }
             return this.service.create(createDto);
         } catch (error) {
             return new BadRequestException(error)
