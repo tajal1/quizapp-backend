@@ -14,7 +14,8 @@ export abstract class BaseController<T extends Document, CreateDto, UpdateDto> {
     async create(@Body() createDto: CreateDto, @Req() req: any) {
         try {
             // Get DTO class based on URL
-            const dtoClass = getDtoClass('users'); // Strip query params
+            const url = req.url.split('/')
+            const dtoClass = getDtoClass(url[url.length - 1]); // Strip query params
             if (dtoClass) {
                 await validateDto(createDto, dtoClass);
                 console.log('BaseController: Validated DTO:', createDto, 'URL:', req.url);
