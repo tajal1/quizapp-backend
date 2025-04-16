@@ -25,7 +25,7 @@ export class QuizesController {
     constructor(
         private readonly quizesService: QuizesService,
         private readonly usersService: UsersService
-    ) {}
+    ) { }
 
     @Post()
     create(@Body() createQuizeDto: CreateQuizeDto, @Req() req: any) {
@@ -78,17 +78,17 @@ export class QuizesController {
         }
     }
 
-    @Patch('score/:quiz_id')
-    async score(@Param('quiz_id') quiz_id: string, @Req() req: any) {
-        try {
-            const score = await this.quizesService.score(quiz_id, req.user?._id)
-            await this.usersService.incrementScoreById(req.user?._id, {
-                positive_score: score.total_positive_score,
-                negetive_score: score.total_negative_score
-            })
-            return score
-        } catch (error) {
-            throw new InternalServerErrorException(error)
-        }
-    }
+    // @Patch('score/:quiz_id')
+    // async score(@Param('quiz_id') quiz_id: string, @Req() req: any) {
+    //     try {
+    //         const score = await this.quizesService.score(quiz_id, req.user?._id)
+    //         await this.usersService.incrementScoreById(req.user?._id, {
+    //             positive_score: score.total_positive_score,
+    //             negetive_score: score.total_negative_score
+    //         })
+    //         return score
+    //     } catch (error) {
+    //         throw new InternalServerErrorException(error)
+    //     }
+    // }
 }

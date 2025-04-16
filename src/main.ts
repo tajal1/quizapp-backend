@@ -15,7 +15,16 @@ async function bootstrap() {
     const APP_ROUTE_PREFIX = 'api'
 
     app.use(helmet())
-    app.useGlobalPipes(new ValidationPipe({ whitelist: true }))
+    // app.useGlobalPipes(new ValidationPipe({ whitelist: true }))
+    app.useGlobalPipes(
+        new ValidationPipe({
+            whitelist: true, // Strip properties not in DTO
+            forbidNonWhitelisted: true, // Reject extra properties
+            transform: true, // Convert JSON to DTO class instance
+            transformOptions: { enableImplicitConversion: true }, // Handle type conversions
+        }),
+    );
+
     app.enableCors(CORS_CONFIG)
     app.setGlobalPrefix(APP_ROUTE_PREFIX)
     app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER))

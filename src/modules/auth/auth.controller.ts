@@ -6,13 +6,13 @@ import { Body, Controller, Post, HttpCode, HttpStatus, InternalServerErrorExcept
 @ApiTags('Login')
 @Controller('auth')
 export class AuthController {
-    constructor(private authService: AuthService) {}
+    constructor(private authService: AuthService) { }
 
     @HttpCode(HttpStatus.OK)
     @Post('login')
     signIn(@Body() signInUserDto: SignInUserDto) {
         try {
-            return this.authService.signIn(signInUserDto)
+            // return this.authService.signIn(signInUserDto)
         } catch (error) {
             throw new InternalServerErrorException(error)
         }

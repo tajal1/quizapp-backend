@@ -9,18 +9,18 @@ export class AuthService {
     constructor(
         private usersService: UsersService,
         private jwtService: JwtService
-    ) {}
+    ) { }
 
-    async signIn(signInUserDto: SignInUserDto): Promise<any> {
-        const user = await this.usersService.findOneByEmail(signInUserDto.email)
-        await this.comparePasswords(signInUserDto.password, user?.password)
-        return {
-            access_token: await this.jwtService.signAsync(
-                { _id: user._id, username: user.username, email: user.email },
-                { secret: process.env.SECRET_JWT_KEY }
-            )
-        }
-    }
+    // async signIn(signInUserDto: SignInUserDto): Promise<any> {
+    //     const user = await this.usersService.findOneByEmail(signInUserDto.email)
+    //     await this.comparePasswords(signInUserDto.password, user?.password)
+    //     return {
+    //         access_token: await this.jwtService.signAsync(
+    //             { _id: user._id, username: user.username, email: user.email },
+    //             { secret: process.env.SECRET_JWT_KEY }
+    //         )
+    //     }
+    // }
 
     async comparePasswords(plainPassword: string, hashedPassword: string): Promise<boolean> {
         try {
