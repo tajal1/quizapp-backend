@@ -25,7 +25,7 @@ export class QuizesController {
     constructor(
         private readonly quizesService: QuizesService,
         private readonly usersService: UsersService
-    ) { }
+    ) {}
 
     @Post()
     create(@Body() createQuizeDto: CreateQuizeDto, @Req() req: any) {

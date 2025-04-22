@@ -1,6 +1,6 @@
-export class Users {
-    neame() {
+export class Logics {
+    execute(hello: string) {
         console.log('Hello')
-        return 'My name is tajal'
+        return 'My name is tajal' + hello
     }
 }

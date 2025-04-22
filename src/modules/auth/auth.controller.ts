@@ -6,7 +6,7 @@ import { Body, Controller, Post, HttpCode, HttpStatus, InternalServerErrorExcept
 @ApiTags('Login')
 @Controller('auth')
 export class AuthController {
-    constructor(private authService: AuthService) { }
+    constructor(private authService: AuthService) {}
 
     @HttpCode(HttpStatus.OK)
     @Post('login')

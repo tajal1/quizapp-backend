@@ -21,9 +21,9 @@ async function bootstrap() {
             whitelist: true, // Strip properties not in DTO
             forbidNonWhitelisted: true, // Reject extra properties
             transform: true, // Convert JSON to DTO class instance
-            transformOptions: { enableImplicitConversion: true }, // Handle type conversions
-        }),
-    );
+            transformOptions: { enableImplicitConversion: true } // Handle type conversions
+        })
+    )
 
     app.enableCors(CORS_CONFIG)
     app.setGlobalPrefix(APP_ROUTE_PREFIX)

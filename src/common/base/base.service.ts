@@ -1,45 +1,43 @@
-import { Inject, Injectable, NotFoundException, Scope } from '@nestjs/common';
-import { Model, Document } from 'mongoose';
-import { CallHook } from '../decorators/call-hook.decorator';
-import { REQUEST } from '@nestjs/core';
+import { Inject, Injectable, NotFoundException, Scope } from '@nestjs/common'
+import { Model, Document } from 'mongoose'
+import { CallHook } from '../decorators/call-hook.decorator'
+import { REQUEST } from '@nestjs/core'
 
 @Injectable()
 export abstract class BaseService<T extends Document, CreateDto = any, UpdateDto = any> {
-    constructor(
-        protected readonly model: Model<T>
-    ) { }
+    constructor(protected readonly model: Model<T>) {}
 
     @CallHook()
     async create(createDto: CreateDto): Promise<T> {
         console.log('=============')
-        const createdEntity = new this.model(createDto);
-        return createdEntity.save();
+        const createdEntity = new this.model(createDto)
+        return createdEntity.save()
     }
 
     async findAll(): Promise<T[]> {
-        return this.model.find().exec();
+        return this.model.find().exec()
     }
 
     async findOne(id: string): Promise<T> {
-        const entity = await this.model.findById(id).exec();
+        const entity = await this.model.findById(id).exec()
         if (!entity) {
-            throw new NotFoundException(`Entity with ID ${id} not found`);
+            throw new NotFoundException(`Entity with ID ${id} not found`)
         }
-        return entity;
+        return entity
     }
 
     async update(id: string, updateDto: UpdateDto): Promise<T> {
-        const entity = await this.model.findByIdAndUpdate(id, updateDto, { new: true }).exec();
+        const entity = await this.model.findByIdAndUpdate(id, updateDto, { new: true }).exec()
         if (!entity) {
-            throw new NotFoundException(`Entity with ID ${id} not found`);
+            throw new NotFoundException(`Entity with ID ${id} not found`)
         }
-        return entity;
+        return entity
     }
 
     async remove(id: string): Promise<void> {
-        const result = await this.model.deleteOne({ _id: id }).exec();
+        const result = await this.model.deleteOne({ _id: id }).exec()
         if (result.deletedCount === 0) {
-            throw new NotFoundException(`Entity with ID ${id} not found`);
+            throw new NotFoundException(`Entity with ID ${id} not found`)
         }
     }
 }

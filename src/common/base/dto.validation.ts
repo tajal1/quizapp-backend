@@ -1,4 +1,4 @@
-import { BadRequestException, ValidationPipe } from "@nestjs/common"
+import { BadRequestException, ValidationPipe } from '@nestjs/common'
 
 export const validateDto = async (body: any, dtoClass: any) => {
     const dto = new dtoClass()

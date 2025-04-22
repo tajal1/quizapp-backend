@@ -1,48 +1,43 @@
-import { Users } from "src/domain/v1/users";
-import { join } from 'path';
+import { join } from 'path'
 
 // call-hook.decorator.ts
 export function CallHook() {
-    return function (
-        target: any,
-        propertyKey: string,
-        descriptor: PropertyDescriptor,
-    ) {
+    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         console.log('========8')
-        const originalMethod = descriptor.value;
-
+        const originalMethod = descriptor.value
 
         descriptor.value = async function (...args: any[]) {
-            const req = this?.request;
+            const pathToModule = join(__dirname, `../../${this?.request.url.replace('/api', 'domain')}`)
 
-
-
-            const url = req.url; // e.g., /api/v1/users
-            const pathModule = url.replace('/api', 'domain') + '.ts';
-            const newUsers = new Users()
-
-            const modulePath = pathModule.replace(/\//g, '/'); // normalize slashes
-            const pathToModule = join(__dirname, '../../domain/v1/users');
             // Dynamically import the module
-            const logic = await import(pathToModule);
+            const imports = await import(pathToModule)
 
-            // Access the exported class
-            const UsersClass = logic.Users;
+            if (imports?.Logics) {
+                const LogicClass = imports.Logics
+                const instance = new LogicClass()
 
-            // Create an instance and call method
-            const instance = new UsersClass();
-            const result = instance.neame();
-            return { result }
+                // check if execute method exists
+                if (typeof instance.execute === 'function') {
+                    const result = await instance.execute('Hello what??')
 
-            console.log(result); // 👉 'My name is tajal'
+                    if (result) {
+                        return { result }
+                    }
+                }
+            }
+            return await originalMethod.apply(this, args)
+        }
 
-            // console.log('=============', target, propertyKey, ...args)
-            // console.log(`[CallHook] Before ${propertyKey}`);
-            // const result = await originalMethod.apply(this, args);
-            // console.log(`[CallHook] After ${propertyKey}`);
-            // return result;
-        };
+        // Create an instance and call method
 
-        return descriptor;
-    };
+        //     try {
+        //         const instance = new LogicClass()
+        //         const result = instance?.execute('Hello what??')
+        //         if (result) return { result }
+        //         await originalMethod.apply(this, args)
+        //     } catch (error) {}
+        // }
+
+        return descriptor
+    }
 }
