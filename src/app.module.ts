@@ -9,6 +9,7 @@ import { MongoExceptionFilter } from './common/utils/MongoExceptionFilter'
 import { AuthModule } from './modules/auth/auth.module'
 import { QuestionsModule } from './modules/questions/questions.module'
 import { QuizesModule } from './modules/quizes/quizes.module'
+import { SyllabusModule } from './modules/syllabus/syllabus.module'
 
 @Module({
     imports: [
@@ -31,7 +32,8 @@ import { QuizesModule } from './modules/quizes/quizes.module'
         UsersModule,
         AuthModule,
         QuestionsModule,
-        QuizesModule
+        QuizesModule,
+        SyllabusModule
     ],
     providers: [
         {
