@@ -6,7 +6,7 @@ import { UsersService } from 'src/modules/users/users.service';
 @Injectable()
 export class LogicService {
   constructor(
-    private readonly userService: UsersService
+    private readonly userService: UsersService,
   ){
 
   }
@@ -16,6 +16,15 @@ export class LogicService {
 
    async findAll() {
     return await this.userService.findAll()
+  }
+
+   async service(url: string) {
+
+    if (url.endsWith('/'))  url = url.slice(0, -1) 
+    const urlIndex = url.split('/')
+    const urlLastIndex = urlIndex[urlIndex.length - 1]
+    if(urlLastIndex === 'users') return this.userService
+    // return await this.userService.findAll()
   }
 
   findOne(id: number) {

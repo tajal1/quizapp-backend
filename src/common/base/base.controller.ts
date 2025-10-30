@@ -45,8 +45,9 @@ export abstract class BaseController<T extends Document, CreateDto, UpdateDto> {
     }
 
     @Get()
-    async findAll() {
-        const data = await this.logicService.findAll()
+    async findAll(@Req() req: any) {
+        const data = await (await this.logicService.service(req?.url))?.findAll()
+        
         if(data){
             console.log('========Custom logic')
             return data
