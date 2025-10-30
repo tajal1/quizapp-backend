@@ -12,10 +12,10 @@ import {
 } from '@nestjs/common'
 import { AuthGuard } from '../auth/auth.guard'
 import { QuizesService } from './quizes.service'
-import { UsersService } from '../users/users.service'
 import { SubmitQuizDto } from './dto/submit-quize.dto'
 import { CreateQuizeDto } from './dto/create-quize.dto'
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
+import { UsersService } from '../users/users.service'
 
 @ApiTags('Quizes')
 @ApiBearerAuth('JWT')

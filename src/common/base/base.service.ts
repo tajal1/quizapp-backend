@@ -15,6 +15,7 @@ export abstract class BaseService<T extends Document, CreateDto = any, UpdateDto
     }
 
     async findAll(): Promise<T[]> {
+        console.log('From base service')
         return this.model.find().exec()
     }
 

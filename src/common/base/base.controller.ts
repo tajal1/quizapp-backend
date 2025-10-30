@@ -17,7 +17,7 @@ import { validateDto } from './dto.validation'
 import { CreateUserDto } from 'src/modules/users/dto/create-user.dto'
 import { getDtoClass } from '../dto-registry'
 import { validate } from 'class-validator'
-import { LogicService } from 'src/modules/logic/logic.service'
+import { LogicService } from 'src/logic/logic.service'
 
 @Controller()
 export abstract class BaseController<T extends Document, CreateDto, UpdateDto> {

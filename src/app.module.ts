@@ -10,7 +10,8 @@ import { AuthModule } from './modules/auth/auth.module'
 import { QuestionsModule } from './modules/questions/questions.module'
 import { QuizesModule } from './modules/quizes/quizes.module'
 import { SyllabusModule } from './modules/syllabus/syllabus.module'
-import { LogicModule } from './modules/logic/logic.module';
+import { LogicModule } from './logic/logic.module'
+
 
 @Module({
     imports: [

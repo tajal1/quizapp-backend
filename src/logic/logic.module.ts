@@ -1,7 +1,7 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { LogicService } from './logic.service';
 import { LogicController } from './logic.controller';
-import { UsersModule } from '../users/users.module';
+import { UsersModule } from 'src/modules/users/users.module';
 
 @Module({
   imports:[forwardRef(() => UsersModule)],
