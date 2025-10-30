@@ -7,7 +7,7 @@ import { REQUEST } from '@nestjs/core'
 export abstract class BaseService<T extends Document, CreateDto = any, UpdateDto = any> {
     constructor(protected readonly model: Model<T>) {}
 
-    @CallHook()
+    // @CallHook()
     async create(createDto: CreateDto): Promise<T> {
         console.log('=============')
         const createdEntity = new this.model(createDto)

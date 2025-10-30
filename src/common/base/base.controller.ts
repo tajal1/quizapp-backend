@@ -17,10 +17,14 @@ import { validateDto } from './dto.validation'
 import { CreateUserDto } from 'src/modules/users/dto/create-user.dto'
 import { getDtoClass } from '../dto-registry'
 import { validate } from 'class-validator'
+import { LogicService } from 'src/modules/logic/logic.service'
 
 @Controller()
 export abstract class BaseController<T extends Document, CreateDto, UpdateDto> {
-    constructor(protected readonly service: BaseService<T, CreateDto, UpdateDto>) {}
+    constructor(
+        protected readonly service: BaseService<T, CreateDto, UpdateDto>,
+        protected readonly logicService: LogicService,
+    ) {}
 
     @Post()
     async create(@Body() createDto: CreateDto, @Req() req: any) {
@@ -41,7 +45,13 @@ export abstract class BaseController<T extends Document, CreateDto, UpdateDto> {
     }
 
     @Get()
-    findAll() {
+    async findAll() {
+        const data = await this.logicService.findAll()
+        if(data){
+            console.log('========Custom logic')
+            return data
+        }
+        console.log('data', data)
         return this.service.findAll()
     }
 

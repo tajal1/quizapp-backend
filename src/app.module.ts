@@ -10,6 +10,7 @@ import { AuthModule } from './modules/auth/auth.module'
 import { QuestionsModule } from './modules/questions/questions.module'
 import { QuizesModule } from './modules/quizes/quizes.module'
 import { SyllabusModule } from './modules/syllabus/syllabus.module'
+import { LogicModule } from './modules/logic/logic.module';
 
 @Module({
     imports: [
@@ -33,7 +34,8 @@ import { SyllabusModule } from './modules/syllabus/syllabus.module'
         AuthModule,
         QuestionsModule,
         QuizesModule,
-        SyllabusModule
+        SyllabusModule,
+        LogicModule
     ],
     providers: [
         {
