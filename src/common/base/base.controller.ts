@@ -8,15 +8,11 @@ import {
     Patch,
     Post,
     Req,
-    UsePipes,
-    ValidationPipe
 } from '@nestjs/common'
-import { Document } from 'mongoose' // Import Document from Mongoose
+import { Document } from 'mongoose'
 import { BaseService } from './base.service'
 import { validateDto } from './dto.validation'
-import { CreateUserDto } from 'src/modules/users/dto/create-user.dto'
 import { getDtoClass } from '../dto-registry'
-import { validate } from 'class-validator'
 import { LogicService } from 'src/logic/logic.service'
 
 @Controller()

@@ -1,7 +1,5 @@
-import { Inject, Injectable, NotFoundException, Scope } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { Model, Document } from 'mongoose'
-import { CallHook } from '../decorators/call-hook.decorator'
-import { REQUEST } from '@nestjs/core'
 
 @Injectable()
 export abstract class BaseService<T extends Document, CreateDto = any, UpdateDto = any> {
